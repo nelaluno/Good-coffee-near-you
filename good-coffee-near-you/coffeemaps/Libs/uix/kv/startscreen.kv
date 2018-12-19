@@ -1,0 +1,116 @@
+# -*- coding: utf-8 -*-
+#:kivy 1.10.1
+#:import SearchLayout searchlayout
+
+#:import MapSource mapview.MapSource
+
+<ZoomEditor@BoxLayout>:
+    id:root.id
+    Button:
+        id: plus
+        Image:
+            source: "Data/Images/plus.jpg"
+            allow_stretch: True
+        on_press: editzoom(-5)
+    Button:
+        id: minus
+        Image:
+            source: "Data/Images/minus.jpg"
+            allow_stretch: True
+        on_press: editzoom(+5)
+        
+<Toolbar@Layout>:
+    size_hint_y: None
+    height: '48dp'
+    padding: '4dp'
+    spacing: '4dp'
+    canvas:
+        Color:
+            rgba: .2, .2, .2, .2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+            
+RelativeLayout:
+    MapView:
+        id: mapview
+        lat: 59.971483
+        lon: 30.323102
+        zoom: 30
+        #size_hint: .5, .5
+        #pos_hint: {"x": .25, "y": .25}
+        #on_map_relocated: mapview2.sync_to(self)
+        #on_map_relocated: mapview3.sync_to(self)
+        #MapMarker:
+        #    id: user
+        #    lat: 59.971483
+        #    lon: 30.323102
+        #MapMarker:
+        #    lat: -33.867
+        #    lon: 151.206
+    Toolbar:
+        top: root.top
+        GridLayout:
+            cols: 2
+            Button:
+                Imagine:
+                    source: "Data/Images/searching.jpg"
+                    allow_stretch: False
+                on_press: searching.open
+        DropDown:
+            id: searching
+            Widget:
+                SearchLayout:
+            on_select: self.dismiss()
+
+<StartScreen>
+    ActionBar:
+        id: action_bar
+        ActionView:
+            ActionPrevious:
+                id: action_previous
+                with_previous: True
+                on_press: root.events_callback("on_previous")
+            ActionOverflow:
+                id: action_overflow
+    # Менеджер экранов.
+    ScreenManager:
+        id: screen_manager
+        # Текущий стартовый экран.
+        Screen:
+            id: screen
+            RelativeLayout:
+                MapView:
+                    id: mapview
+                    lat: 59.971483
+                    lon: 30.323102
+                    zoom: 30
+                    #size_hint: .5, .5
+                    #pos_hint: {"x": .25, "y": .25}
+                    #on_map_relocated: mapview2.sync_to(self)
+                    #on_map_relocated: mapview3.sync_to(self)
+                    #MapMarker:
+                    #    id: user
+                    #    lat: 59.971483
+                    #    lon: 30.323102
+                    #MapMarker:
+                    #    lat: -33.867
+                    #    lon: 151.206
+                Toolbar:
+                    top: root.top
+                    GridLayout:
+                        cols: 2
+                        Button:
+                            Imagine:
+                                source: "Data/Images/searching.jpg"
+                                allow_stretch: False
+                            on_press: menu.open(searching)
+                        DropDown:
+                            id: menu
+                            Widget:
+                                id: searching
+                                SearchLayout:
+                                    on_select: self.dismiss()
+                                    
+                                    

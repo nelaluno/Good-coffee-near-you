@@ -1,0 +1,160 @@
+CREATE DATABASE "coffee shop"
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'Russian_Russia.1251'
+       LC_CTYPE = 'Russian_Russia.1251'
+       CONNECTION LIMIT = -1;
+CREATE TABLE address
+(
+  address_id integer NOT NULL,
+  latitude integer NOT NULL,
+  longitude integer NOT NULL,
+  city character varying(50) NOT NULL,
+  street character varying(100) NOT NULL,
+  house character varying(10) NOT NULL,
+  coffee_house_id integer NOT NULL,
+  CONSTRAINT address_pkey PRIMARY KEY (address_id),
+  CONSTRAINT address_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT address_address_id_check CHECK (address_id > 0),
+  CONSTRAINT address_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT address_latitude_check CHECK (latitude > 0),
+  CONSTRAINT address_longitude_check CHECK (longitude > 0)
+)
+CREATE TABLE coffee_house
+(
+  coffee_house_id integer NOT NULL,
+  name text NOT NULL,
+  address_id integer NOT NULL,
+  working_id integer NOT NULL,
+  price_id integer NOT NULL,
+  rating_id integer NOT NULL,
+  hasfoodtogo boolean,
+  CONSTRAINT coffee_house_pkey PRIMARY KEY (coffee_house_id),
+  CONSTRAINT coffee_house_address_id_fkey FOREIGN KEY (address_id)
+      REFERENCES address (address_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT coffee_house_price_id_fkey FOREIGN KEY (price_id)
+      REFERENCES price (price_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT coffee_house_rating_id_fkey FOREIGN KEY (rating_id)
+      REFERENCES total_rating (rating_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT coffee_house_working_id_fkey FOREIGN KEY (working_id)
+      REFERENCES working_time (working_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT coffee_house_address_id_check CHECK (address_id > 0),
+  CONSTRAINT coffee_house_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT coffee_house_price_id_check CHECK (price_id > 0),
+  CONSTRAINT coffee_house_rating_id_check CHECK (rating_id > 0),
+  CONSTRAINT coffee_house_working_id_check CHECK (working_id > 0)
+)
+CREATE TABLE form_new_place
+(
+  coffee_name character varying(100) NOT NULL,
+  phone_number character varying(20),
+  price_id integer NOT NULL,
+  adress_id integer NOT NULL,
+  working_id integer NOT NULL,
+  coffee_house_id integer NOT NULL,
+  hasfoodtogo boolean,
+  CONSTRAINT form_new_place_pkey PRIMARY KEY (coffee_name),
+  CONSTRAINT form_new_place_adress_id_fkey FOREIGN KEY (adress_id)
+      REFERENCES address (address_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_place_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_place_price_id_fkey FOREIGN KEY (price_id)
+      REFERENCES price (price_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_place_working_id_fkey FOREIGN KEY (working_id)
+      REFERENCES working_time (working_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_place_adress_id_check CHECK (adress_id > 0),
+  CONSTRAINT form_new_place_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT form_new_place_price_id_check CHECK (price_id > 0),
+  CONSTRAINT form_new_place_working_id_check CHECK (working_id > 0),
+  CONSTRAINT phone_number CHECK (phone_number::text ~~ '([0-9][0-9][0-9]) [0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'::text)
+)
+CREATE TABLE form_new_price
+(
+  coffee_name text NOT NULL,
+  phone_number character varying(50),
+  price_id integer NOT NULL,
+  coffee_house_id integer NOT NULL,
+  CONSTRAINT form_new_price_pkey PRIMARY KEY (coffee_name),
+  CONSTRAINT form_new_price_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_price_price_id_fkey FOREIGN KEY (price_id)
+      REFERENCES price (price_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_new_price_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT form_new_price_price_id_check CHECK (price_id > 0),
+  CONSTRAINT phonenumber CHECK (phone_number::text ~~ '([0-9][0-9][0-9]) [0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'::text)
+)
+CREATE TABLE price
+(
+  price_id integer NOT NULL,
+  latte_coast double precision NOT NULL,
+  cappuccino_coast double precision NOT NULL,
+  americano_coast double precision NOT NULL,
+  coffee_house_id integer NOT NULL,
+  CONSTRAINT price_pkey PRIMARY KEY (price_id),
+  CONSTRAINT price_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT price_americano_coast_check CHECK (americano_coast > 0::double precision),
+  CONSTRAINT price_cappuccino_coast_check CHECK (cappuccino_coast > 0::double precision),
+  CONSTRAINT price_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT price_latte_coast_check CHECK (latte_coast > 0::double precision),
+  CONSTRAINT price_price_id_check CHECK (price_id > 0)
+)
+
+CREATE TABLE total_rating
+(
+  rating_id integer NOT NULL,
+  total_rating_latte double precision NOT NULL,
+  total_rating_capuccino double precision NOT NULL,
+  total_rating_americano double precision NOT NULL,
+  rating_count_latte integer NOT NULL,
+  rating_count_capuccino integer NOT NULL,
+  rating_count_americano integer NOT NULL,
+  coffee_house_id integer NOT NULL,
+  CONSTRAINT total_rating_pkey PRIMARY KEY (rating_id),
+  CONSTRAINT total_rating_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT total_rating_rating_id_check CHECK (rating_id > 0),
+  CONSTRAINT total_rating_total_rating_americano_check CHECK (total_rating_americano > 0::double precision),
+  CONSTRAINT total_rating_total_rating_capuccino_check CHECK (total_rating_capuccino > 0::double precision),
+  CONSTRAINT total_rating_total_rating_latte_check CHECK (total_rating_latte > 0::double precision)
+)
+CREATE TABLE user_rating
+(
+  user_id integer NOT NULL,
+  user_rating_latte double precision NOT NULL,
+  user_rating_americano double precision NOT NULL,
+  user_rating_cappuccino double precision NOT NULL,
+  coffee_house_id integer NOT NULL,
+  CONSTRAINT user_rating_pkey PRIMARY KEY (user_id),
+  CONSTRAINT user_rating_coffee_house_id_fkey FOREIGN KEY (coffee_house_id)
+      REFERENCES coffee_house (coffee_house_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT user_rating_coffee_house_id_check CHECK (coffee_house_id > 0),
+  CONSTRAINT user_rating_user_id_check CHECK (user_id >= 0),
+  CONSTRAINT user_rating_user_rating_americano_check CHECK (user_rating_americano >= 0::double precision),
+  CONSTRAINT user_rating_user_rating_cappuccino_check CHECK (user_rating_cappuccino >= 0::double precision),
+  CONSTRAINT user_rating_user_rating_latte_check CHECK (user_rating_latte >= 0::double precision)
+)
+CREATE TABLE working_time
+(
+  working_id integer NOT NULL,
+  opening_hour time without time zone NOT NULL,
+  closing_hour time without time zone NOT NULL,
+  CONSTRAINT working_time_pkey PRIMARY KEY (working_id),
+  CONSTRAINT working_time_working_id_check CHECK (working_id >= 0)
+)

@@ -1,0 +1,53 @@
+#:kivy 1.10.1
+
+#:import Label kivy.uix.label
+#:import BoxLayout kivy.uix.boxlayout
+#:import CheckBox kivy.uix.checkbox
+#:import Button kivy.uix.button
+
+<HouseInfo@BoxLayout>:
+    BoxLayOut:
+        Label:
+            id: name
+            #text: root.name
+             italic: True
+        Label:
+            id: is_open
+            #text: root.is_open
+    BoxLayOut:
+        Label:
+            text: "Время работы"
+            italic: True
+        Label:
+            id: working
+            #text: root.working
+    GridLayou:
+        cols: 3
+        Label:
+            text: "Латте"
+        Label:
+            id: latte_score
+            #text: root.score#change
+        Label:
+            id: latte_price
+            #text: root.price#change
+        Label:
+            text: "Капучино"
+        Label:
+            id: kapuchino_score
+            #text: root.score#change
+        Label:
+            id: americano_price
+            #text: root.price#change
+        Label:
+            text: "Американо"
+        Label:
+            id: kapuchino_score
+            #text: root.score#change
+        Label:
+            id: americano_price
+            #text: root.price#change
+    Label:
+        id: has_food_to_go
+        
+    

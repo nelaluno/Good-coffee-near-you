@@ -1,0 +1,25 @@
+#:kivy 1.10.1
+
+<Drinks@Button>:
+    id: main_button
+    text: "Выбрать кофе"
+    size_hint_y:None
+    on_release: drinks_list.open
+    DropDown:
+        id: drinks_list
+        on_select:
+            lambda instance, x:
+                setattr(self.drinksbutton, 'text', x)
+        Button:
+            text: "Американо"
+            size_hint_y:None
+            on_release: self.select("Американо")
+        Button:
+            text: "Капучино"
+            size_hint_y:None
+            on_release: self.select("Капучино")
+        Button:
+            text: "Латте"
+            size_hint_y:None
+            on_release: self.select("Латте")
+        

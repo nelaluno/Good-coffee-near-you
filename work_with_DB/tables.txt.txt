@@ -1,0 +1,5 @@
+coffee_house: coffee_house_id, name, address_id, website, has_food_to_go
+working_time: coffee_houseId, day_of_week, opening_hour, closing_hour
+coffee_house_menu: coffee_house_id, coffee_id, total_rating, rating_count, cost
+coffe_house_address: coffee_house_id, address_id
+addresses: address_id, address, latitude, longitude

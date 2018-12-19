@@ -1,0 +1,61 @@
+﻿#:kivy 1.10.1
+<About>:
+    orientation: "vertical"
+    ScrollView:
+        GridLayout:
+            cols: 1
+            size_hint_y: None
+            spacing: 10
+            padding: 10
+            height: self.minimum_height
+            canvas:
+                Color:
+                    rgb: root.about_background
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            # Логотип приложения
+            Image:
+                source: "Data/Images/logo.png"
+                size_hint_y: None
+            # Версия приложения
+            Label:
+                text: "Clean Master 5.4.0.1395"
+                size_hint_y: None
+                height: "10pt"
+                color: 0.1, 0.1, 0.1, 1
+                italic: True
+            # Бокс меню share
+            GridLayout:
+                id: box_share
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+            # Текст лицензии
+            Label:
+                text: root.text_license
+                text_size: self.size
+                font_size: dp(12)
+                valign: "top"
+                size_hint_y: None
+                height: root.height / 2.5
+                color: 0.1, 0.1, 0.1, 1
+    # Бокс копирайта
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .2
+        canvas:
+            Color:
+                rgb: root.about_background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgb: 0.5843137254901961, 0.5843137254901961, 0.5843137254901961
+            Line:
+                points: [0, self.size[1], self.size[0], self.size[1]]
+                width: 1
+        Label:
+            text: "Copyright 2016 Demo Clean Master\nby HeaTTheatR"
+            halign: "center"
+            color: 0.1, 0.1, 0.1, 1

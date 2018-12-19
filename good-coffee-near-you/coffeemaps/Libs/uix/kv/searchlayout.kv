@@ -1,0 +1,87 @@
+#:kivy 1.10.1
+
+#:import Spinner kivy.uix.spinner
+#:import BoxLayout kivy.uix.boxlayout
+#:import Label kivy.uix.label
+#:import TextInput kivy.uix.textinput
+#:import GridLayout kivy.uix.gridlayout
+#:import CheckBox kivy.uix.checkbox
+#:import Button kivy.uix.button
+
+<SearchLayout@BoxLayout>:
+    id: root
+    orientation: "vertical"
+    #color: 
+    Label:
+        text: 'Параметры поиска'
+        fint_size: '30sp'
+        size_hint: (1, 0.2)
+    Spinner:
+        id: root.drinks
+        text: "Выбрать кофе"
+        values: "Капучино", "Латте", "Американо", "Любой кофе"
+        size_hint: (1, None)
+        #size:
+    BoxLayout:
+        Label:
+            size_hint: (None, 0.5)
+            text: "Цена:"
+        TextInput:
+            id: root.mincost
+            size_hint: (None, None)
+            multiline: False
+            text: "min"
+        TextInput:
+            id: root.maxcost
+            size_hint: (None, None)
+            multiline: False
+            text: "max"
+    BoxLayout:
+        #orientation: "horizontal"
+        Label:
+            text: 'Минимальный рейтнг:'
+        Slider:
+            id: root.score
+            min: 0
+            max: 5
+            value: 3
+            value_track: True
+            #value_track_color: [0, 0, 1, 0.5]
+            #on_touch_up:
+            step: 0.1
+            on_value: score.value = abs(round(self.value))
+        Label:
+            text: score.value
+    GridLayout:
+        cols:2
+        size_hint: (1, None)
+        Label:
+            text: "Открыто"
+            size_hint: (0.5, 0.5)
+        CheckBox:
+            id: root.is_open
+            active: True
+            size_hint: (0.5, 0.5)
+        Label:
+            size_hint: (0.5, 0.5)
+            text: "Есть еда с собой"
+        CheckBox:
+            size_hint: (0.5, 0.5)
+            id: root.has_food_to_go
+    BoxLayout:
+    Button:
+        text: "Добавить новую кофейню"
+    Button:
+        text: "Изменить цену в кофейне"
+    Button:
+        text: "Добавить еду с собой в кофейне"
+        
+    
+                
+    
+            
+        
+    
+        
+    
+        
