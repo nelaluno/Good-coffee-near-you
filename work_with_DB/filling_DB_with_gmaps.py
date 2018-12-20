@@ -4,7 +4,7 @@ from bd_interaction import *
 
 file = ('tables.txt')
 bd = bd_interaction('good-coffee-near-you.cgcnnlvq1rjd.us-east-1.rds.amazonaws.com',
-                               'barista', 'good0afternoon', 'CoffeHouses', 1, file)
+                               'barista', 'good0afternoon', 'good-coffee-near-you', 1, file)
 
 from googleplaces import GooglePlaces, types, lang
 google_places = GooglePlaces('AIzaSyAjyUT_utIGfYkUNsbwwUQAjOZidif-DGk')
@@ -37,30 +37,32 @@ google_places = GooglePlaces('AIzaSyAjyUT_utIGfYkUNsbwwUQAjOZidif-DGk')
 def data_processing(query_result, i=0):
     for place in query_result.places:
         place.get_details()
-        CoffeeHouseId = place.place_id
-        bd.tables['TotalRating'].insert(colomns=['CoffeeHouseId', 'TotalRating', 'RatingCount'],
-                                        values=[CoffeeHouseId, place.rating, 100])
-        bd.tables['Address'].insert(colomns=['CoffeeHouseId', 'Address', 'Latitude', 'Longitude'],
-                                    values=[CoffeeHouseId, place.formatted_address,
-                                            place.geo_location['lan'], place.geo_location['lng']])
-        AddressId = bd.tables['Address'].query("SELECT LAST_INSERT_ID();")
+        coffee_house_id = place.place_id
+        for coffee_id in range(1,4):
+            bd.tables['coffee_house_menu'].insert(colomns=['coffee_house_id', 'coffee_id',
+                                                           'total_rating', 'rating_count'],
+                                                  values=[coffee_house_id, coffee_id, place.rating, 100])
+        #+coffee_house_address
+        address_id = bd.tables['coffee_house_address'].query("SELECT LAST_INSERT_ID();")
+        bd.tables['address'].insert(colomns=['address_id','adress', 'latitude', 'longitude'],
+                                    values=[address_id, place.formatted_address,
+                                            place.geo_location['lan'], place.geo_location['lng']])#!!! 
         for day, time in place.opening_hours.open:
             opening, closing = [t+'00' for t in time.split('-')]
-            bd.tables['WorkingTime'].insert(colomns=['CoffeeHouseId', 'DayOfWeek',
-                                                     'OpeningHour', 'ClosingHour'],
-                                            values=[CoffeeHouseId, day, opening, closing])
-        bd.tables['CoffeeHouse'].insert(colomns=['CoffeeHouseId', 'Name', 'AddressId',
-                                                 'Website', 'HasFoodToGo'],
-                                        values=[CoffeeHouseId, place.name, AddressId
-                                                place.geo_location['lan'],
-                                                place.geo_location['lng']])
+            bd.tables['working_time'].insert(colomns=['coffee_house_id', 'day_of_week',
+                                                     'opening_hour', 'closing_hour'],
+                                            values=[coffee_house_id, day, opening, closing])
+        bd.tables['coffee_house'].insert(colomns=['coffee_house_id', 'name', 'address_id',
+                                                 'website', 'has_food_to_go'],
+                                        values=[coffee_house_id, place.name, address_id
+                                                place.website, any(place.website))
     if query_result.has_next_page_token:
         data_processing(google_places.nearby_search(pagetoken=query_result.next_page_token), i)
         
         
 query_result = google_places.nearby_search(
         location='Санкт-Петербург, Россия', keyword='кофе с собой', 
-        language='ru', radius=3200, types=['cafe'])
+        language='ru', radius=20000, types=['cafe'])
 
 data_processing(query_result)
 

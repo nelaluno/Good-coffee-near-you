@@ -1,5 +1,7 @@
 #:kivy 1.10.1
 
+#:import Slider kivy.uix.slider
+#:import DropDown kivy.uix.dropdown
 #:import Spinner kivy.uix.spinner
 #:import BoxLayout kivy.uix.boxlayout
 #:import Label kivy.uix.label
@@ -8,9 +10,24 @@
 #:import CheckBox kivy.uix.checkbox
 #:import Button kivy.uix.button
 
+<ScoreDropDown@DropDown>:
+    Slider:
+        id: score
+        orientation: "vertical"
+        min: 0
+        max: 5
+        value: 3
+        value_track: True
+        #value_track_color: [0, 0, 1, 0.5]
+        #on_touch_up:
+        step: 0.1
+        on_value: score.value = abs(self.value)
+        
 <SearchLayout@BoxLayout>:
-    id: root
+    id: root.id
     orientation: "vertical"
+    padding: 10
+    spacing:5
     #color: 
     Label:
         text: 'Параметры поиска'
@@ -20,68 +37,62 @@
         id: root.drinks
         text: "Выбрать кофе"
         values: "Капучино", "Латте", "Американо", "Любой кофе"
-        size_hint: (1, None)
+        size_hint: (1, 0.2)
         #size:
-    BoxLayout:
+    GridLayout:
+        cols:3
         Label:
-            size_hint: (None, 0.5)
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (1, 0.1)
+        Label:
+            text:'Приоритет'
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (0.2, 0.2)
             text: "Цена:"
-        TextInput:
-            id: root.mincost
-            size_hint: (None, None)
-            multiline: False
-            text: "min"
-        TextInput:
-            id: root.maxcost
-            size_hint: (None, None)
-            multiline: False
-            text: "max"
-    BoxLayout:
-        #orientation: "horizontal"
+        BoxLayout:
+            TextInput:
+                id: mincost
+                size_hint: 1, 0.2
+                multiline: False
+                text: "min"
+            TextInput:
+                id: maxcost
+                size_hint: 1, 0.2
+                multiline: False
+                text: "max"
+        CheckBox:
+            size_hint: (0.5, 0.2)
+            id: cost_priority
+            group: 'priority'
         Label:
             text: 'Минимальный рейтнг:'
-        Slider:
-            id: root.score
-            min: 0
-            max: 5
-            value: 3
-            value_track: True
-            #value_track_color: [0, 0, 1, 0.5]
-            #on_touch_up:
-            step: 0.1
-            on_value: score.value = abs(round(self.value))
-        Label:
-            text: score.value
+        ScoreButton:
+            id:scorebutton
+        CheckBox:
+            size_hint: (0.5, 0.2)
+            id: score_priority
+            group: 'priority'
     GridLayout:
-        cols:2
-        size_hint: (1, None)
+        cols:4
+        size_hint: 1, 0.2
         Label:
             text: "Открыто"
-            size_hint: (0.5, 0.5)
+            size_hint: (0.2, 0.5)
         CheckBox:
-            id: root.is_open
+            id: is_open
             active: True
-            size_hint: (0.5, 0.5)
+            size_hint: (0.2, 0.2)
         Label:
             size_hint: (0.5, 0.5)
             text: "Есть еда с собой"
         CheckBox:
-            size_hint: (0.5, 0.5)
-            id: root.has_food_to_go
-    BoxLayout:
+            size_hint: (0.2, 0.2)
+            id: has_food_to_go
     Button:
         text: "Добавить новую кофейню"
     Button:
-        text: "Изменить цену в кофейне"
-    Button:
-        text: "Добавить еду с собой в кофейне"
-        
-    
-                
-    
-            
-        
-    
-        
-    
-        
+        text: "Изменить информацию о кофейне"

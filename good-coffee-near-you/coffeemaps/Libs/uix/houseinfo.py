@@ -1,3 +1,12 @@
+import sys
+from kivy.base import runTouchApp
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+if __name__ == '__main__' and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    
+root = Builder.load_string('''
 #:kivy 1.10.1
 
 #:import Label kivy.uix.label
@@ -49,6 +58,19 @@
             id: americano_price
             #text: root.price#change
     Label:
-        id: has_food_to_go
-        
-    
+        id: has_food_to_go''')
+
+
+class HouseInfo(BoxLayout):
+    #name = StringProperty('')
+    def __init__(self, **kwargs):
+        # make sure we aren't overriding any important functionality
+        super(HouseInfo, self).__init__(**kwargs)
+    def build(self):
+        return root
+    #def full(self,**kwargs):
+    #    for _id in **kwargs:
+    #        if _id in self,ids:
+    #            setattr(root._id, kwargs[_id])
+a = HouseInfo(name='House', is_open='открыто')
+runTouchApp(a)

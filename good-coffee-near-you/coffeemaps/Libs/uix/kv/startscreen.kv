@@ -1,8 +1,101 @@
 # -*- coding: utf-8 -*-
 #:kivy 1.10.1
-#:import SearchLayout searchlayout
-
+#:import SearchLayout .searchlayout
+#:import HouseInfo .houseinfo 
 #:import MapSource mapview.MapSource
+
+
+<ScoreDropDown@DropDown>:
+    Slider:
+        id: score
+        orientation: "vertical"
+        min: 0
+        max: 5
+        value: 3
+        value_track: True
+        #value_track_color: [0, 0, 1, 0.5]
+        #on_touch_up:
+        step: 0.1
+        on_value: root.select(abs(score.value))
+
+<SearchLayout@BoxLayout>:
+    id: root.id
+    orientation: "vertical"
+    padding: 10
+    spacing:5
+    #color: 
+    Label:
+        text: 'Параметры поиска'
+        fint_size: '30sp'
+        size_hint: (1, 0.2)
+    Spinner:
+        id: root.drinks
+        text: "Выбрать кофе"
+        values: "Капучино", "Латте", "Американо", "Любой кофе"
+        size_hint: (1, 0.2)
+        #size:
+    GridLayout:
+        cols:3
+        Label:
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (1, 0.1)
+        Label:
+            text:'Приоритет'
+            size_hint: (1, 0.1)
+        Label:
+            size_hint: (0.2, 0.2)
+            text: "Цена:"
+        BoxLayout:
+            TextInput:
+                id: mincost
+                size_hint: 1, 0.2
+                multiline: False
+                text: "min"
+            TextInput:
+                id: maxcost
+                size_hint: 1, 0.2
+                multiline: False
+                text: "max"
+        CheckBox:
+            size_hint: (0.5, 0.2)
+            id: cost_priority
+            group: 'priority'
+        Label:
+            text: 'Минимальный рейтнг:'
+        Button:
+            id:scorebutton
+            text: "3"
+            on_release: score_drop_down.open()
+        ScoreDropDown:
+            id: score_drop_down
+            on_select: lambda instance, x: setattr(scorebutton, 'text', x)
+        CheckBox:
+            size_hint: (0.5, 0.2)
+            id: score_priority
+            group: 'priority'
+    GridLayout:
+        cols:4
+        size_hint: 1, 0.2
+        Label:
+            text: "Открыто"
+            size_hint: (0.2, 0.5)
+        CheckBox:
+            id: is_open
+            active: True
+            size_hint: (0.2, 0.2)
+        Label:
+            size_hint: (0.5, 0.5)
+            text: "Есть еда с собой"
+        CheckBox:
+            size_hint: (0.2, 0.2)
+            id: has_food_to_go
+    Button:
+        text: "Добавить новую кофейню"
+    Button:
+        text: "Изменить информацию о кофейне"
 
 <ZoomEditor@BoxLayout>:
     id:root.id
@@ -30,7 +123,6 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    
             
 RelativeLayout:
     MapView:
@@ -79,7 +171,7 @@ RelativeLayout:
         id: screen_manager
         # Текущий стартовый экран.
         Screen:
-            id: screen
+            id: start
             RelativeLayout:
                 MapView:
                     id: mapview
@@ -97,7 +189,11 @@ RelativeLayout:
                     #MapMarker:
                     #    lat: -33.867
                     #    lon: 151.206
-                Toolbar:
+                Button:
+                    size_hint_y: None
+                    height: '48dp'
+                    padding: '4dp'
+                    spacing: '4dp'
                     top: root.top
                     GridLayout:
                         cols: 2
@@ -105,12 +201,17 @@ RelativeLayout:
                             Imagine:
                                 source: "Data/Images/searching.jpg"
                                 allow_stretch: False
-                            on_press: menu.open(searching)
-                        DropDown:
-                            id: menu
-                            Widget:
-                                id: searching
-                                SearchLayout:
-                                    on_select: self.dismiss()
+                            on_release: menu.open(searching)
+                DropDown:
+                    id: menu
+                    SearchLayout:
+                        id: searching
+                        on_select: self.dismiss()
+                    PageLayout:
+                        id: results
+                        Label:
+                            text: '1'
+                        Label:
+                            text: '2'
                                     
                                     
